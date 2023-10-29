@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="02ac4b20-6932-49a4-a7f4-5db82c28442b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/JtProject/basedata.sql" beforeDir="false" afterPath="$PROJECT_DIR$/JtProject/basedata.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JtProject/src/main/java/com/jtspringproject/JtSpringProject/HibernateConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/JtProject/src/main/java/com/jtspringproject/JtSpringProject/HibernateConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JtProject/src/main/java/com/jtspringproject/JtSpringProject/controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/JtProject/src/main/java/com/jtspringproject/JtSpringProject/controller/AdminController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JtProject/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/JtProject/src/main/resources/application.properties" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2XGMDG8LYr5YYiLBDbSVkCNs1J1" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master2&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/sania/IdeaProjects/E-commerce-project-springBoot&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Facets&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.import&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;redshift&quot;,
+      &quot;mysql&quot;
+    ]
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="02ac4b20-6932-49a4-a7f4-5db82c28442b" name="Changes" comment="" />
+      <created>1698250843758</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1698250843758</updated>
+      <workItem from="1698339036139" duration="260000" />
+      <workItem from="1698339310488" duration="1631000" />
+      <workItem from="1698383596490" duration="17000" />
+      <workItem from="1698383658941" duration="1138000" />
+      <workItem from="1698384857220" duration="18000" />
+      <workItem from="1698385224055" duration="552000" />
+      <workItem from="1698385793400" duration="822000" />
+      <workItem from="1698386630850" duration="252000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
