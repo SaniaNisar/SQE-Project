@@ -1,0 +1,68 @@
+@RunWith(MockitoJUnitRunner.class)
+public class AdminControllerTest {
+
+    @Mock
+    private UserService userService;
+
+    @InjectMocks
+    private AdminController adminController;
+
+    @Test
+    public void testDeleteCustomer() {
+        int customerId = 1;
+        String expectedUrl = "http://localhost:8080/admin/customers";
+
+        String actualUrl = adminController.deleteCustomer(customerId);
+
+        verify(userService).deleteUser(customerId);
+        assertEquals(expectedUrl, actualUrl);
+    }
+}
+@RunWith(MockitoJUnitRunner.class)
+public class UserServiceTest {
+
+    @Mock
+    private UserDao userDao;
+
+    @InjectMocks
+    private UserService userService;
+
+    @Test
+    public void testDeleteUser() {
+        int userId = 1;
+
+        userService.deleteUser(userId);
+
+        verify(userDao).deleteUser(userId);
+    }
+}
+@RunWith(MockitoJUnitRunner.class)
+public class UserDaoTest {
+
+    @Mock
+    private SessionFactory sessionFactory;
+
+    @Mock
+    private Session session;
+
+    @InjectMocks
+    private UserDao userDao;
+
+    @Before
+    public void setUp() {
+        when(sessionFactory.getCurrentSession()).thenReturn(session);
+    }
+
+    @Test
+    public void testDeleteUser() {
+        int userId = 1;
+        User user = new User();
+        user.setId(userId);
+
+        when(session.get(User.class, userId)).thenReturn(user);
+
+        userDao.deleteUser(userId);
+
+        verify(session).delete(user);
+    }
+}
