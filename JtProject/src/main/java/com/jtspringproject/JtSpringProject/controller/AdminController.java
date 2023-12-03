@@ -52,7 +52,7 @@ public class AdminController {
 			
 	}
 	
-	
+
 	@GetMapping("login")
 	public String adminlogin() {
 		
