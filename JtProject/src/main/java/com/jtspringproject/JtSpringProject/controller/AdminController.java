@@ -286,5 +286,17 @@ public class AdminController {
 		}
 		return "redirect:/index";
 	}
+	
+        @GetMapping("/addUser")
+	public String addUserForm(Model model) {
+		model.addAttribute("user", new User());
+		return "addUser"; // Return the name of the JSP for the user add form
+	}
 
+	@PostMapping("/addUser")
+	public String addUser(@ModelAttribute User user) {
+		// Adding my logic to save the user in the database
+		userService. addUser(user);
+		return "redirect:/admin/customers";
+	}
 }
