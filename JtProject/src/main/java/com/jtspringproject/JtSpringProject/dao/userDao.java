@@ -62,6 +62,19 @@ public class userDao {
 		long count = query.getSingleResult();
 		return count > 0;
 	}
+
+	@Transactional
+	public User getUserByUsername(String username) {
+		try {
+			Session session = this.sessionFactory.getCurrentSession();
+			Query<User> query = session.createQuery("FROM CUSTOMER WHERE username = :username", User.class);
+			query.setParameter("username", username);
+			return query.getSingleResult();
+		} catch (NoResultException e) {
+			// Handle the case where no user with the given username is found
+			return null;
+		}
+	}
 	
     @Transactional
     public User getUser(String username,String password) {
