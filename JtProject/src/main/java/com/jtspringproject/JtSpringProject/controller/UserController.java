@@ -85,34 +85,35 @@ public class UserController{
 		
 		return "userLogin";
 	}
+	
 	@RequestMapping(value = "userloginvalidate", method = RequestMethod.POST)
-	public ModelAndView userlogin(@RequestParam("username") String username,
-								  @RequestParam("password") String pass,
-								  HttpServletResponse res) {
+	public ModelAndView userlogin(@RequestParam("username") String username, @RequestParam("password") String pass, HttpServletResponse res, HttpServletRequest req) {
 
 		User u = this.userService.checkLogin(username, pass);
 
-		// Check if user object is not null and if the username and password match
-		if (u != null && u.getPassword().equals(pass)) {
-			// User is valid, proceed with login
+		if (u != null && u.getUsername().equals(username)) {
+			HttpSession session = req.getSession();
+			session.setAttribute("currentUsername", username);
+			session.setAttribute("currentpass", pass);
+
 			res.addCookie(new Cookie("username", u.getUsername()));
-			ModelAndView mView = new ModelAndView("index"); // Assuming 'index' is the view for a successful login
+			ModelAndView mView = new ModelAndView("index");
 			mView.addObject("user", u);
-
 			List<Product> products = this.productService.getProducts();
-			mView.addObject("products", products.isEmpty() ? "No products are available" : products);
 
+			if (products.isEmpty()) {
+				mView.addObject("msg", "No products are available");
+			} else {
+				mView.addObject("products", products);
+			}
 			return mView;
+
 		} else {
-			// User is invalid or password does not match, return to login page with error message
 			ModelAndView mView = new ModelAndView("userLogin");
-			mView.addObject("msg", "Invalid username or password");
+			mView.addObject("msg", "Please enter correct email and password");
 			return mView;
-
-
 		}
 	}
-
 
 	@GetMapping("/logout")
 	public String logout(HttpServletRequest request, HttpServletResponse response) {
