@@ -40,6 +40,10 @@ public class userService {
 	{
 		return this.userDao.isEmailExists(email);
 	}
-
+        
+	@Transactional
+	public User addUser(User user) {
+		return this.userDao.saveUser(user);
+	}
 	
 }
