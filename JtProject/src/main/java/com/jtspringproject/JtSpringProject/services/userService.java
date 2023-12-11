@@ -45,5 +45,21 @@ public class userService {
 	public User addUser(User user) {
 		return this.userDao.saveUser(user);
 	}
-	
+
+
+	@Transactional
+	public User updateUser(User user) {
+		return this.userDao.saveUser(user);
+	}
+
+	@Transactional
+	public void deleteUser(int userId) {
+		this.userDao.deleteUser(userId);
+	}
+
+	@Transactional
+	public User getUserById(int userId) {
+		return this.userDao.getUserById(userId);
+	}
+
 }
