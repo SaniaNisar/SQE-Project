@@ -12,9 +12,11 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.Cookie;
+
 
 import com.jtspringproject.JtSpringProject.services.cartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.jtspringproject.JtSpringProject.services.userService;
 import com.jtspringproject.JtSpringProject.services.productService;
 import com.jtspringproject.JtSpringProject.services.cartService;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 
 @Controller
@@ -49,21 +51,6 @@ public class UserController{
 	{
 		return "buy";
 	}
-
-	@GetMapping("/PasswordError")
-	public String passwordError() {
-		return "PasswordError";
-	}
-
-	@GetMapping("/ExistsUsernameError")
-	public String ExistsUsernameError() {
-		return "ExistsUsernameError";
-	}
-
-	@GetMapping("/BlankUsername")
-	public String BlankUsername() {
-		return "BlankUsername";
-	}
 	
 
 	@GetMapping("/")
@@ -71,43 +58,53 @@ public class UserController{
 		
 		return "userLogin";
 	}
-
-	@GetMapping("/ExistsEmailError")
-	public String ExistsEmailError(Model model) {
-
-		return "ExistsEmailError";
-	}
-
-	public UserController(userService userService) {
-		this.userService = userService;
-	}
-
 	@RequestMapping(value = "userloginvalidate", method = RequestMethod.POST)
-	public ModelAndView userlogin( @RequestParam("username") String username, @RequestParam("password") String pass,Model model,HttpServletResponse res) {
-		
-		System.out.println(pass);
+	public ModelAndView userlogin(@RequestParam("username") String username,
+								  @RequestParam("password") String pass,
+								  HttpServletResponse res) {
+
 		User u = this.userService.checkLogin(username, pass);
-		System.out.println(u.getUsername());
-		if(u.getUsername().equals(username)) {	
-			
+
+		// Check if user object is not null and if the username and password match
+		if (u != null && u.getPassword().equals(pass)) {
+			// User is valid, proceed with login
 			res.addCookie(new Cookie("username", u.getUsername()));
-			ModelAndView mView  = new ModelAndView("index");	
+			ModelAndView mView = new ModelAndView("index"); // Assuming 'index' is the view for a successful login
 			mView.addObject("user", u);
+
 			List<Product> products = this.productService.getProducts();
+			mView.addObject("products", products.isEmpty() ? "No products are available" : products);
 
-			if (products.isEmpty()) {
-				mView.addObject("msg", "No products are available");
-			} else {
-				mView.addObject("products", products);
-			}
 			return mView;
-
-		}else {
+		} else {
+			// User is invalid or password does not match, return to login page with error message
 			ModelAndView mView = new ModelAndView("userLogin");
-			mView.addObject("msg", "Please enter correct email and password");
+			mView.addObject("msg", "Invalid username or password");
 			return mView;
+
+
 		}
-		
+	}
+
+
+	@GetMapping("/logout")
+	public String logout(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.invalidate();
+		}
+
+		// Clear the cookies if any
+		Cookie[] cookies = request.getCookies();
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				cookie.setMaxAge(0);
+				cookie.setPath("/");
+				response.addCookie(cookie);
+			}
+		}
+
+		return "redirect:/"; // Redirect to login page or home page as per your requirement
 	}
 	
 	
@@ -126,38 +123,17 @@ public class UserController{
 
 		return mView;
 	}
-
 	@RequestMapping(value = "newuserregister", method = RequestMethod.POST)
-	public ModelAndView newUseRegister(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
-
-		if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
-			redirectAttributes.addFlashAttribute("error", "Username cannot be empty or contain only white spaces.");
-			return new ModelAndView("redirect:/BlankUsername");
-		}
-
-		if (userService.isUserExists(user.getUsername())) {
-			redirectAttributes.addFlashAttribute("error", "Username already exists. Please choose a different username.");
-			return new ModelAndView("redirect:/ExistsUsernameError");
-		}
-		String passwordPattern = "^(?=.*[0-9])(?=.*[a-zA-Z]).{8,}$";
-
-		if (!user.getPassword().matches(passwordPattern)) {
-			redirectAttributes.addFlashAttribute("error", "Password must be at least 8 characters long and include both alphabets and numbers.");
-			return new ModelAndView("redirect:/PasswordError");
-		}
-
-		if(userService.isEmailExists(user.getEmail()))
-		{
-			redirectAttributes.addFlashAttribute("error", "Username already exists. Please choose a different username.");
-			return new ModelAndView("redirect:/ExistsEmailError");
-		}
-
+	public String newUseRegister(@ModelAttribute User user)
+	{
+		
 		System.out.println(user.getEmail());
 		user.setRole("ROLE_NORMAL");
 		this.userService.addUser(user);
-
-		return new ModelAndView("redirect:/userLogin1");
+		
+		return "redirect:/";
 	}
+
 
 
 
