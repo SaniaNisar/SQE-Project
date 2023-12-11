@@ -299,4 +299,30 @@ public class AdminController {
 		userService. addUser(user);
 		return "redirect:/admin/customers";
 	}
+
+	@GetMapping("/updateUser")
+	public String updateUserForm(@RequestParam("id") int userId, Model model) {
+		// Retrieve the user by ID and add it to the model
+		User user = userService.getUserById(userId);
+		model.addAttribute("user", user);
+		// Add any other necessary data to the model
+		return "updateUser"; // Return the name of the JSP or Thymeleaf template for the user update form
+	}
+
+	@PostMapping("/updateUser")
+	public String updateUser(@ModelAttribute User user) {
+		// Add logic to update the user in the database
+		// For simplicity, you can use the same userService.saveUser method
+		userService.addUser(user);
+		// Redirect to the customer list page after updating the user
+		return "redirect:/admin/customers";
+	}
+
+	@GetMapping("/deleteUser")
+	public String deleteUser(@RequestParam("id") int userId) {
+		// Add logic to delete the user by ID from the database
+		userService.deleteUser(userId);
+		// Redirect to the customer list page after deleting the user
+		return "redirect:/admin/customers";
+	}
 }
