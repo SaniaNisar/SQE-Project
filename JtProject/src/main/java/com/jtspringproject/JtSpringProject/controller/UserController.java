@@ -29,6 +29,8 @@ import com.jtspringproject.JtSpringProject.services.userService;
 import com.jtspringproject.JtSpringProject.services.productService;
 import com.jtspringproject.JtSpringProject.services.cartService;
 
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 
 @Controller
@@ -40,6 +42,10 @@ public class UserController{
 	@Autowired
 	private productService productService;
 
+	public UserController(userService userService) {
+		this.userService = userService;
+	}
+
 	@GetMapping("/register")
 	public String registerUser()
 	{
@@ -50,6 +56,27 @@ public class UserController{
 	public String buy()
 	{
 		return "buy";
+	}
+
+	@GetMapping("/PasswordError")
+	public String passwordError() {
+		return "PasswordError";
+	}
+
+	@GetMapping("/ExistsUsernameError")
+	public String ExistsUsernameError() {
+		return "ExistsUsernameError";
+	}
+
+	@GetMapping("/BlankUsername")
+	public String BlankUsername() {
+		return "BlankUsername";
+	}
+
+	@GetMapping("/ExistsEmailError")
+	public String ExistsEmailError(Model model) {
+
+		return "ExistsEmailError";
 	}
 	
 
@@ -123,18 +150,39 @@ public class UserController{
 
 		return mView;
 	}
+
 	@RequestMapping(value = "newuserregister", method = RequestMethod.POST)
-	public String newUseRegister(@ModelAttribute User user)
-	{
-		
+	public ModelAndView newUseRegister(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
+
+		if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+			redirectAttributes.addFlashAttribute("error", "Username cannot be empty or contain only white spaces.");
+			return new ModelAndView("redirect:/BlankUsername");
+		}
+
+		if (userService.isUserExists(user.getUsername())) {
+			redirectAttributes.addFlashAttribute("error", "Username already exists. Please choose a different username.");
+			return new ModelAndView("redirect:/ExistsUsernameError");
+		}
+		String passwordPattern = "^(?=.*[0-9])(?=.*[a-zA-Z]).{8,}$";
+
+		if (!user.getPassword().matches(passwordPattern)) {
+			redirectAttributes.addFlashAttribute("error", "Password must be at least 8 characters long and include both alphabets and numbers.");
+			return new ModelAndView("redirect:/PasswordError");
+		}
+
+		if(userService.isEmailExists(user.getEmail()))
+		{
+			redirectAttributes.addFlashAttribute("error", "Username already exists. Please choose a different username.");
+			return new ModelAndView("redirect:/ExistsEmailError");
+		}
+
 		System.out.println(user.getEmail());
 		user.setRole("ROLE_NORMAL");
 		this.userService.addUser(user);
-		
-		return "redirect:/";
+
+		// Redirect to userLogin on successful registration
+		return new ModelAndView("redirect:/userLogin1");
 	}
-
-
 
 
 	//for Learning purpose of model
