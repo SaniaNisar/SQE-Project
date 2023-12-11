@@ -30,8 +30,6 @@ jobs:
         
     - name: List Directory Contents
       run: ls -R
-    - name: Clean and Build with Maven
-      run: mvn clean install
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
