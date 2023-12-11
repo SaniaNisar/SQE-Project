@@ -17,13 +17,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class HibernateConfiguration {
     @Value("${db.driver}")
     private String DRIVER;
-
+ 
     @Value("${db.password}")
     private String PASSWORD;
  
     @Value("${db.url}")
     private String URL;
-
+ 
     @Value("${db.username}")
     private String USERNAME;
  
