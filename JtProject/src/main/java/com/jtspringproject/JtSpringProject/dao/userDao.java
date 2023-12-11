@@ -83,4 +83,10 @@ public class userDao {
 		}
     	
     }
+	@Transactional
+	public User saveUser(User user) {
+		Session session = this.sessionFactory.getCurrentSession();
+		session.saveOrUpdate(user);
+		return user;
+	}
 }
