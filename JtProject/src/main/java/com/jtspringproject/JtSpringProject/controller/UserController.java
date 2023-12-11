@@ -78,13 +78,79 @@ public class UserController{
 
 		return "ExistsEmailError";
 	}
-	
+
+	/*@GetMapping("/user/profile")
+	public ModelAndView getUserDetails(HttpServletRequest req) {
+		// Assuming you have a way to get the current username from the session or authentication context
+		String currentUsername = //;
+
+				// Use the userService to get the user details by username
+		User currentUser = userService.checkLogin(currentUsername, null);
+
+		ModelAndView modelAndView = new ModelAndView("Profile");
+		modelAndView.addObject("username", currentUser.getUsername());
+		modelAndView.addObject("email", currentUser.getEmail());
+		modelAndView.addObject("address", currentUser.getAddress());
+
+		return modelAndView;
+	}
+	 */
+
+	@GetMapping("/user/profile")
+	public ModelAndView getUserDetails(HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		String currentUsername = (String) session.getAttribute("currentUsername");
+		String currentpass = (String) session.getAttribute("currentpass");
+
+		if (currentUsername == null || currentpass == null) {
+			return new ModelAndView("redirect:/login"); // Redirect to login if session attributes are missing
+		}
+
+		User currentUser = userService.checkLogin(currentUsername, currentpass);
+		if (currentUser == null) {
+			return new ModelAndView("redirect:/login"); // Redirect to login if user is not found
+		}
+
+		ModelAndView modelAndView = new ModelAndView("profile");
+		modelAndView.addObject("user", currentUser); // Adding the entire user object to the model
+		return modelAndView;
+	}
+
 
 	@GetMapping("/")
 	public String userlogin(Model model) {
 		
 		return "userLogin";
 	}
+
+	/*@RequestMapping(value = "userloginvalidate", method = RequestMethod.POST)
+	public ModelAndView userlogin( @RequestParam("username") String username, @RequestParam("password") String pass,Model model,HttpServletResponse res) {
+		
+		System.out.println(pass);
+		User u = this.userService.checkLogin(username, pass);
+		System.out.println(u.getUsername());
+		if(u.getUsername().equals(username)) {	
+			
+			res.addCookie(new Cookie("username", u.getUsername()));
+			ModelAndView mView  = new ModelAndView("index");	
+			mView.addObject("user", u);
+			List<Product> products = this.productService.getProducts();
+
+			if (products.isEmpty()) {
+				mView.addObject("msg", "No products are available");
+			} else {
+				mView.addObject("products", products);
+			}
+			return mView;
+
+		}else {
+			ModelAndView mView = new ModelAndView("userLogin");
+			mView.addObject("msg", "Please enter correct email and password");
+			return mView;
+		}
+		
+	}
+	 */
 	
 	@RequestMapping(value = "userloginvalidate", method = RequestMethod.POST)
 	public ModelAndView userlogin(@RequestParam("username") String username, @RequestParam("password") String pass, HttpServletResponse res, HttpServletRequest req) {
