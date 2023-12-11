@@ -87,5 +87,4 @@ public class UserControllerTest {
 
         assertEquals("redirect:/userLogin1", modelAndView.getViewName());
     }
-
 }
