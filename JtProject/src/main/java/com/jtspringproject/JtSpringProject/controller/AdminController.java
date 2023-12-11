@@ -1,22 +1,28 @@
 package com.jtspringproject.JtSpringProject.controller;
 
-import com.jtspringproject.JtSpringProject.models.Category;
-import com.jtspringproject.JtSpringProject.models.Product;
-import com.jtspringproject.JtSpringProject.models.User;
-import com.jtspringproject.JtSpringProject.services.categoryService;
-import com.jtspringproject.JtSpringProject.services.productService;
-import com.jtspringproject.JtSpringProject.services.userService;
+import java.sql.*;
+import java.sql.PreparedStatement;
+import java.util.List;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.List;
+import com.jtspringproject.JtSpringProject.models.Category;
+import com.jtspringproject.JtSpringProject.models.Product;
+import com.jtspringproject.JtSpringProject.models.User;
+import com.jtspringproject.JtSpringProject.services.categoryService;
+import com.jtspringproject.JtSpringProject.services.productService;
+import com.jtspringproject.JtSpringProject.services.userService;
+import com.mysql.cj.protocol.Resultset;
+
+import net.bytebuddy.asm.Advice.This;
+import net.bytebuddy.asm.Advice.OffsetMapping.ForOrigin.Renderer.ForReturnTypeName;
 
 @Controller
 @RequestMapping("/admin")
@@ -52,7 +58,7 @@ public class AdminController {
 			
 	}
 	
-
+	
 	@GetMapping("login")
 	public String adminlogin() {
 		
@@ -65,30 +71,31 @@ public class AdminController {
 		else
 			return "redirect:/admin/login";
 	}
-	@GetMapping("/loginvalidate")
-	public String adminlog(Model model) {
-		
-		return "adminlogin";
-	}
 	@RequestMapping(value = "loginvalidate", method = RequestMethod.POST)
-	public ModelAndView adminlogin( @RequestParam("username") String username, @RequestParam("password") String pass) {
-		
-		User user=this.userService.checkLogin(username, pass);
-		
-		if(user.getRole().equals("ROLE_ADMIN")) {
-			ModelAndView mv = new ModelAndView("adminHome");
-			adminlogcheck=1;
-			mv.addObject("admin", user);
-			return mv;
+	public ModelAndView adminlogin(@RequestParam("username") String username, @RequestParam("password") String pass) {
+
+		User user = this.userService.checkLogin(username, pass);
+
+		// Check if user exists and has role 'ROLE_ADMIN'
+		if (user != null && user.getRole() != null && user.getRole().equals("ROLE_ADMIN")) {
+			// Check if password matches
+			if (user.getPassword().equals(pass)) {
+				// Valid user, proceed with login
+				ModelAndView mv = new ModelAndView("adminHome");
+				adminlogcheck = 1;
+				mv.addObject("admin", user);
+				return mv;
+			}
 		}
-		else {
-			ModelAndView mv = new ModelAndView("adminlogin");
-			mv.addObject("msg", "Please enter correct username and password");
-			return mv;
-		}
+
+		// Invalid credentials, return to login page with error message
+		ModelAndView mv = new ModelAndView("adminlogin");
+		mv.addObject("msg", "Invalid username or password");
+		return mv;
 	}
+
 	@GetMapping("categories")
-	public ModelAndView getcategory(Model model) {
+	public ModelAndView getcategory() {
 		if(adminlogcheck==0){
 			ModelAndView mView = new ModelAndView("adminlogin");
 			return mView;
@@ -206,15 +213,14 @@ public class AdminController {
 	public String postproduct() {
 		return "redirect:/admin/categories";
 	}
-
+	
 	@GetMapping("customers")
 	public ModelAndView getCustomerDetail() {
-		System.out.println("adminlogcheck: " + adminlogcheck);
-
-		if(adminlogcheck == 0) {
+		if(adminlogcheck==0){
 			ModelAndView mView = new ModelAndView("adminlogin");
 			return mView;
-		} else {
+		}
+		else {
 			ModelAndView mView = new ModelAndView("displayCustomers");
 			List<User> users = this.userService.getUsers();
 			mView.addObject("customers", users);
@@ -230,7 +236,7 @@ public class AdminController {
 		{
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommjava","root","");
-			PreparedStatement stmt = con.prepareStatement("select * from users where username = ?"+";");
+			PreparedStatement stmt = con.prepareStatement("select * from customer where username = ?"+";");
 			stmt.setString(1, usernameforclass);
 			ResultSet rst = stmt.executeQuery();
 			
@@ -263,9 +269,9 @@ public class AdminController {
 		try
 		{
 			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommjava","root","Sania@1060+!");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommjava","root","");
 			
-			PreparedStatement pst = con.prepareStatement("update users set username= ?,email = ?,password= ?, address= ? where uid = ?;");
+			PreparedStatement pst = con.prepareStatement("update users set customer= ?,email = ?,password= ?, address= ? where uid = ?;");
 			pst.setString(1, username);
 			pst.setString(2, email);
 			pst.setString(3, password);
@@ -281,16 +287,4 @@ public class AdminController {
 		return "redirect:/index";
 	}
 
-	@GetMapping("/addUser")
-	public String addUserForm(Model model) {
-		model.addAttribute("user", new User());
-		return "addUser"; // Return the name of the JSP for the user add form
-	}
-
-	@PostMapping("/addUser")
-	public String addUser(@ModelAttribute User user) {
-		// Adding my logic to save the user in the database
-		userService. addUser(user);
-		return "redirect:/admin/customers";
-	}
 }
