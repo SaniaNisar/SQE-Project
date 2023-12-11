@@ -78,6 +78,10 @@ public class UserController{
 
 		return "ExistsEmailError";
 	}
+	@RequestMapping("/aboutUs")
+	public String aboutUs() {
+		return "aboutUs";
+	}
 
 	/*@GetMapping("/user/profile")
 	public ModelAndView getUserDetails(HttpServletRequest req) {
