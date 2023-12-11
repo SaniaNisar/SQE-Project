@@ -26,13 +26,5 @@ public class userService {
 		return this.userDao.getUser(username, password);
 	}
 
-	public boolean isUserExists(String username) {
-		return this.userDao.isUserExists(username);
-    	}
-
-	public boolean isEmailExists(String email)  {
-		return this.userDao.isEmailExists(email);
-	}
-
 	
 }
