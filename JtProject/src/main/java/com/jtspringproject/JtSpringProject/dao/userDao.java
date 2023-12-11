@@ -40,6 +40,29 @@ public class userDao {
 //    public User checkLogin() {
 //    	this.sessionFactory.getCurrentSession().
 //    }
+
+
+	@Transactional
+	public boolean isUserExists(String username) 
+	{
+		Query<Long> query = sessionFactory.getCurrentSession()
+				.createQuery("select count(*) from CUSTOMER where username = :username", Long.class);
+		query.setParameter("username", username);
+
+		long count = query.getSingleResult();
+		return count > 0;
+	}
+
+	@Transactional
+	public boolean isEmailExists(String email) {
+		Query<Long> query = sessionFactory.getCurrentSession()
+				.createQuery("select count(*) from CUSTOMER where email = :email", Long.class);
+		query.setParameter("email", email);
+
+		long count = query.getSingleResult();
+		return count > 0;
+	}
+	
     @Transactional
     public User getUser(String username,String password) {
     	Query query = sessionFactory.getCurrentSession().createQuery("from CUSTOMER where username = :username");
