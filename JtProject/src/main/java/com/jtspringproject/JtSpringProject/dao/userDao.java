@@ -76,30 +76,58 @@ public class userDao {
 		}
 	}
 	
-    @Transactional
-    public User getUser(String username,String password) {
-    	Query query = sessionFactory.getCurrentSession().createQuery("from CUSTOMER where username = :username");
-    	query.setParameter("username",username);
+  //   @Transactional
+  //   public User getUser(String username,String password) {
+  //   	Query query = sessionFactory.getCurrentSession().createQuery("from CUSTOMER where username = :username");
+  //   	query.setParameter("username",username);
     	
-    	try {
-			User user = (User) query.getSingleResult();
-			System.out.println(user.getPassword());
-			if(password.equals(user.getPassword())) {
-				return user;
-			}else {		
-				return new User();
-			}
-		}catch(Exception e){
-			System.out.println(e.getMessage());
-			User user = new User();
-			return user;
-		}
+  //   	try {
+		// 	User user = (User) query.getSingleResult();
+		// 	System.out.println(user.getPassword());
+		// 	if(password.equals(user.getPassword())) {
+		// 		return user;
+		// 	}else {		
+		// 		return new User();
+		// 	}
+		// }catch(Exception e){
+		// 	System.out.println(e.getMessage());
+		// 	User user = new User();
+		// 	return user;
+		// }
     	
-    }
+  //   }
 	@Transactional
 	public User saveUser(User user) {
 		Session session = this.sessionFactory.getCurrentSession();
 		session.saveOrUpdate(user);
 		return user;
+	}
+
+@Transactional
+	public void deleteUser(int userId) {
+		Session session = this.sessionFactory.getCurrentSession();
+		User user = session.get(User.class, userId);
+		session.delete(user);
+	}
+
+	@Transactional
+	public User getUserById(int userId) {
+		Session session = this.sessionFactory.getCurrentSession();
+		return session.get(User.class, userId);
+	}
+
+
+
+	@Transactional
+	public User getUser(String username, String password) {
+		Query<User> query = sessionFactory.getCurrentSession().createQuery("from CUSTOMER where username = :username", User.class);
+		query.setParameter("username", username);
+
+		try {
+			return query.getSingleResult();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return new User();
+		}
 	}
 }
