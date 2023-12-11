@@ -32,6 +32,11 @@ jobs:
       run: ls -R
     - name: Build with Maven
       run: mvn clean install
+    - name: Save state
+      run: echo "{name}={value}" >> $GITHUB_STATE
+
+    - name: Set output
+      run: echo "{name}={value}" >> $GITHUB_OUTPUT
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
